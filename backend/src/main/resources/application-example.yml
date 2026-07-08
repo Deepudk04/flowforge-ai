@@ -8,6 +8,8 @@ spring:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/flowforge}
     username: ${DATABASE_USERNAME:flowforge}
     password: ${DATABASE_PASSWORD:flowforge}
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
   jpa:
     hibernate:
       ddl-auto: validate
