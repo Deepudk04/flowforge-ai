@@ -16,10 +16,16 @@ def health() -> dict[str, str]:
 
 
 @router.get("/ready")
-def ready() -> dict[str, str | bool]:
+def ready() -> dict[str, str | bool | int]:
     settings = get_settings()
     return {
         "status": "ready",
-        "providerConfigured": settings.llm_provider == "mock",
+        "llmProvider": settings.llm_provider,
+        "llmConfigured": settings.remote_llm_configured,
         "defaultModel": settings.default_model,
+        "embeddingProvider": settings.embedding_provider,
+        "embeddingModel": settings.embedding_model,
+        "retrievalBackend": settings.retrieval_backend,
+        "retrievalDefaultLimit": settings.retrieval_default_limit,
+        "vectorStoreConfigured": settings.vector_store_configured,
     }
