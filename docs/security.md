@@ -1,16 +1,28 @@
 # Security Notes
 
-FlowForge AI is designed to run with mock providers by default. Production deployments should provide secrets through the runtime environment or a managed secret store.
+FlowForge services run with local mock/demo defaults unless configured otherwise. Production deployments should provide secrets through environment variables or a managed secret store.
 
-## Checks
+## Backend
 
-Recommended local checks before committing:
+- Keep `.env` files local.
+- Commit example config only.
+- Use `FLOWFORGE_SECURITY_ENABLED=true` to enable JWT resource-server checks.
+- Use generic roles: `ROLE_USER`, `ROLE_ADMIN`, `ROLE_VIEWER`.
+- Configure `JWT_ISSUER_URI` and `JWT_AUDIENCE` through the environment.
+- Do not log request bodies or provider credentials.
 
-```bash
-git diff --check
-gitleaks detect --source .
-pytest
-pip-audit
-```
+## Logging
 
-If a tool is unavailable, document that in the review notes and run the remaining checks.
+Sensitive keys should be masked before logging:
+
+- `Authorization`
+- `Cookie`
+- `Set-Cookie`
+- `password`
+- `token`
+- `apiKey`
+- `secret`
+
+## AI Service
+
+The AI service uses mock providers by default. Add real provider credentials only through runtime configuration.
