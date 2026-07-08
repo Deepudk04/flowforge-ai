@@ -10,8 +10,15 @@ import org.springframework.validation.annotation.Validated;
 public record FlowForgeProperties(
         @NotBlank String apiBasePath,
         @NotBlank String frontendOrigin,
+        Security security,
         AiService aiService
 ) {
+    public record Security(
+            boolean enabled,
+            @NotBlank String audience
+    ) {
+    }
+
     public record AiService(
             @NotBlank String baseUrl,
             @Min(1000) int timeoutMs

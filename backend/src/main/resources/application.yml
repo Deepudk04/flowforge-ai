@@ -18,16 +18,25 @@ spring:
     default-property-inclusion: non_null
     serialization:
       write-dates-as-timestamps: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI:http://localhost:8080/issuer}
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,metrics
   endpoint:
     health:
       probes:
         enabled: true
+
+logging:
+  pattern:
+    level: "%5p [correlationId:%X{correlationId:-}]"
 
 springdoc:
   api-docs:
@@ -38,6 +47,9 @@ springdoc:
 flowforge:
   api-base-path: /api/v1
   frontend-origin: ${FRONTEND_ORIGIN:http://localhost:5173}
+  security:
+    enabled: ${FLOWFORGE_SECURITY_ENABLED:false}
+    audience: ${JWT_AUDIENCE:flowforge-api}
   ai-service:
     base-url: ${AI_SERVICE_BASE_URL:http://localhost:8000}
     timeout-ms: ${AI_SERVICE_TIMEOUT_MS:30000}
