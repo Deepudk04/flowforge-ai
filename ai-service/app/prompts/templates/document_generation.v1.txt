@@ -1,0 +1,11 @@
+﻿Write a technical document draft.
+
+Client: $client_name
+Objective: $objective
+Input:
+$source_text
+
+Context:
+$context
+
+Use clear sections, avoid unsupported claims, and keep assumptions separate from facts.

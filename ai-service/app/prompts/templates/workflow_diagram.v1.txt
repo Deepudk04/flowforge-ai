@@ -1,0 +1,7 @@
+﻿Create a Mermaid flowchart from the process below.
+
+Workflow: $workflow_title
+Steps:
+$steps
+
+Return Mermaid syntax only. Keep node labels short and readable.
