@@ -159,7 +159,13 @@ flowchart TD
     finance_review --> approval
 ```
 
-Additional synthetic examples live under `samples/`.
+Additional synthetic examples:
+
+- [Document request](samples/input/process-document-request.sample.json)
+- [Workflow diagram request](samples/input/workflow-diagram-request.sample.json)
+- [Generated document](samples/output/generated-document.sample.md)
+- [Workflow diagram](samples/output/workflow-diagram.sample.mmd)
+- [API response examples](samples/output/api-response.sample.json)
 
 ## Local Setup
 
@@ -212,6 +218,18 @@ This repository is a sanitized public portfolio version built with synthetic exa
 - **Mermaid diagrams:** produces text-first workflow diagrams that are easy to diff, review, and render in GitHub.
 - **Mock provider:** makes tests and local demos deterministic without real API keys.
 - **Versioned prompts:** keeps prompt behavior explicit and reviewable.
+
+More detail:
+
+- [System architecture](docs/architecture.md)
+- [Backend architecture](docs/backend-architecture.md)
+- [AI layer design](docs/ai-layer-design.md)
+- [RAG pipeline](docs/rag-pipeline.md)
+- [API design](docs/api-design.md)
+- [Security notes](docs/security.md)
+- [Local development](docs/local-development.md)
+- [Design decisions](docs/design-decisions.md)
+- [Roadmap](docs/roadmap.md)
 
 ## Trade-Offs
 

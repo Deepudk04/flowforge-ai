@@ -26,3 +26,15 @@ The backend is a Spring Boot service under the `com.flowforge` package. It expos
 ## Persistence
 
 The first schema contains generation jobs, generated documents, and workflow diagrams. Table and column names are generic and contain no seed data.
+
+## API Boundaries
+
+Controllers return `ApiResponse<T>` envelopes and rely on DTO validation for request shape. The current generation services return deterministic local results, while `integration.AiServiceClient` defines the boundary for provider-backed generation.
+
+## Error Handling
+
+`GlobalExceptionHandler` maps validation, bad request, not found, and unexpected errors to a consistent response envelope. `CorrelationIdFilter` adds request correlation metadata to logs and responses.
+
+## Security Profile
+
+Local demo mode is disabled by default through `FLOWFORGE_SECURITY_ENABLED=false`. When enabled, the service is configured as a JWT resource server with generic roles and no committed issuer secrets.

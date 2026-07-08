@@ -21,3 +21,4 @@ target/
 .project
 
 .mvn/wrapper/maven-wrapper.jar
+migration.md

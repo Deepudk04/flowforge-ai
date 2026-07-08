@@ -1,0 +1,13 @@
+title = "FlowForge AI public repository secret scan"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Local-only placeholder values used in documentation and examples"
+regexes = [
+  '''DATABASE_PASSWORD=flowforge''',
+  '''POSTGRES_PASSWORD:\s*flowforge''',
+  '''LLM_API_KEY=''',
+  '''JWT_AUDIENCE=flowforge-api'''
+]

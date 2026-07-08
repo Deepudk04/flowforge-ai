@@ -1,6 +1,10 @@
 flowchart TD
-    intake[Receive intake]
-    review[Review request]
-    draft[Prepare draft]
-    intake -->|next| review
-    review --> draft
+    intake[Submit vendor intake form]
+    procurement_review[Procurement reviews risk]
+    finance_review[Finance validates payment details]
+    legal_review[Legal reviews contract terms]
+    approval[Approve vendor]
+    intake --> procurement_review
+    procurement_review --> finance_review
+    finance_review --> legal_review
+    legal_review --> approval
