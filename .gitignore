@@ -13,3 +13,9 @@ build/
 *.egg-info/
 *.log
 .DS_Store
+
+target/
+*.class
+.settings/
+.classpath
+.project
