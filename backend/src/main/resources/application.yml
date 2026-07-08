@@ -4,9 +4,30 @@ server:
 spring:
   application:
     name: flowforge-backend
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
 
 management:
   endpoints:
     web:
       exposure:
         include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+flowforge:
+  api-base-path: /api/v1
+  frontend-origin: ${FRONTEND_ORIGIN:http://localhost:5173}
+  ai-service:
+    base-url: ${AI_SERVICE_BASE_URL:http://localhost:8000}
+    timeout-ms: ${AI_SERVICE_TIMEOUT_MS:30000}
