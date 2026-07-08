@@ -190,7 +190,7 @@ mvn test
 mvn spring-boot:run
 ```
 
-Run PostgreSQL and the backend with Docker Compose:
+Run PostgreSQL, the AI service, and the backend with Docker Compose:
 
 ```bash
 docker compose up --build

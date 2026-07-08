@@ -10,7 +10,17 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 copy .env.example .env
+python -m compileall app tests
+pytest -v
 uvicorn app.main:app --reload
+```
+
+## Docker
+
+From the repository root:
+
+```bash
+docker compose up --build ai-service
 ```
 
 ## Configuration

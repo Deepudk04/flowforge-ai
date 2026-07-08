@@ -35,7 +35,7 @@ The same safe placeholder values are available in `backend/.env.example`.
 docker compose up --build
 ```
 
-The local compose file uses sample PostgreSQL credentials and does not include production settings.
+The local compose file starts PostgreSQL, the FastAPI AI service, and the Spring Boot backend. It uses sample PostgreSQL credentials and mock AI settings only.
 
 ## AI Service
 
