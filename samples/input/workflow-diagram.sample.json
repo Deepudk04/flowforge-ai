@@ -1,0 +1,12 @@
+{
+  "title": "SampleWorkflow",
+  "nodes": [
+    { "node_id": "intake", "label": "Receive intake" },
+    { "node_id": "review", "label": "Review request" },
+    { "node_id": "draft", "label": "Prepare draft" }
+  ],
+  "edges": [
+    { "from_node_id": "intake", "to_node_id": "review", "label": "next" },
+    { "from_node_id": "review", "to_node_id": "draft" }
+  ]
+}
