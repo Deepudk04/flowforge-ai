@@ -1,0 +1,6 @@
+﻿{
+  "document_id": "SampleDocument",
+  "client_name": "DemoClient",
+  "objective": "Prepare onboarding notes for a sample workflow.",
+  "source_text": "The requester submits an intake form, the reviewer validates fields, and the draft is prepared for approval."
+}

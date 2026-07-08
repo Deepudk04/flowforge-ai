@@ -1,19 +1,35 @@
-from app.config import Settings, get_settings
+﻿from app.config import Settings, get_settings
 from app.models import DocumentGenerationRequest, GenerationResult, WorkflowGenerationRequest
+from app.prompts import PromptRenderer
 from app.providers import AIProvider, MockAIProvider, ProviderRequest
 
 
 class AIOrchestrator:
-    def __init__(self, settings: Settings | None = None, provider: AIProvider | None = None):
+    def __init__(
+        self,
+        settings: Settings | None = None,
+        provider: AIProvider | None = None,
+        prompt_renderer: PromptRenderer | None = None,
+    ):
         self.settings = settings or get_settings()
         self.provider = provider or MockAIProvider(self.settings)
+        self.prompt_renderer = prompt_renderer or PromptRenderer()
 
     def generate_document(self, request: DocumentGenerationRequest) -> GenerationResult:
         context = [item.content for item in request.retrieval_context]
+        prompt = self.prompt_renderer.render(
+            "document_generation",
+            {
+                "client_name": request.client_name,
+                "objective": request.objective,
+                "source_text": request.source_text,
+                "context": context or ["No additional context provided."],
+            },
+        )
         provider_response = self.provider.generate(
             ProviderRequest(
-                instruction="Generate a technical document draft from the provided input.",
-                user_content=f"Client: {request.client_name}\nObjective: {request.objective}\nInput: {request.source_text}",
+                instruction="Draft a document using the rendered prompt.",
+                user_content=prompt,
                 context=context,
             )
         )
@@ -27,11 +43,18 @@ class AIOrchestrator:
 
     def generate_workflow(self, request: WorkflowGenerationRequest) -> GenerationResult:
         context = [item.content for item in request.retrieval_context]
-        numbered_steps = "\n".join(f"{index + 1}. {step}" for index, step in enumerate(request.steps))
+        steps = [f"{index + 1}. {step}" for index, step in enumerate(request.steps)]
+        prompt = self.prompt_renderer.render(
+            "workflow_diagram",
+            {
+                "workflow_title": request.title,
+                "steps": steps,
+            },
+        )
         provider_response = self.provider.generate(
             ProviderRequest(
-                instruction="Generate a workflow summary from the provided process steps.",
-                user_content=f"Workflow: {request.title}\nSteps:\n{numbered_steps}",
+                instruction="Draft a workflow response using the rendered prompt.",
+                user_content=prompt,
                 context=context,
             )
         )
