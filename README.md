@@ -2,22 +2,50 @@
 
 [![CI](https://github.com/Deepudk04/flowforge-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/Deepudk04/flowforge-ai/actions/workflows/ci.yml)
 
-FlowForge AI is an enterprise-style AI platform for generating structured process documents, compliance-style documentation, and workflow diagrams from business/process inputs. It combines a Spring Boot backend, Python FastAPI AI service, prompt orchestration, RAG-style retrieval, PostgreSQL/pgvector, and Mermaid diagram generation.
+FlowForge AI is a public-safe, enterprise-style AI platform for generating structured process documents, compliance-style documentation, and Mermaid workflow diagrams from business process inputs.
 
-## Problem Statement
+The project combines a Spring Boot backend, a FastAPI AI service, prompt orchestration, retrieval interfaces, PostgreSQL/pgvector boundaries, deterministic local generation, and synthetic examples that are safe to run without private data or real LLM credentials.
 
-Teams often maintain process documents, workflow diagrams, SOPs, and compliance-style documentation manually. This is slow, inconsistent, hard to update, and difficult to connect with existing context. FlowForge AI addresses that workflow by accepting structured or semi-structured process inputs, retrieving relevant context, rendering versioned prompts, generating structured documents, and producing Mermaid workflow diagrams.
+## Table of Contents
 
-## What FlowForge AI Does
+- [Why It Exists](#why-it-exists)
+- [What It Does](#what-it-does)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [API Overview](#api-overview)
+- [Example Requests](#example-requests)
+- [Local Development](#local-development)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Design Notes](#design-notes)
+- [Documentation](#documentation)
+- [Roadmap](#roadmap)
 
-- Exposes Spring Boot APIs for document generation, workflow diagram generation, generation job lookup, and template discovery.
-- Provides deterministic local generation paths so the project can run without real LLM credentials.
-- Includes a FastAPI AI service with configuration, health/readiness endpoints, prompt templates, mock provider support, retrieval interfaces, in-memory retrieval, and pgvector adapter code.
-- Generates Mermaid diagrams from structured workflow steps.
-- Stores backend metadata through PostgreSQL-oriented JPA entities and Flyway migrations.
-- Documents a public-safe architecture using synthetic examples only.
+## Why It Exists
 
-## Architecture Overview
+Teams often maintain SOPs, workflow diagrams, compliance-style documents, and process references manually. That work is slow, repetitive, inconsistent, and difficult to update when process context changes.
+
+FlowForge AI models a safer generation workflow:
+
+1. Accept structured or semi-structured process input.
+2. Retrieve relevant context through a dedicated AI service boundary.
+3. Render versioned prompts.
+4. Generate reviewable document or workflow output.
+5. Store and expose generation metadata through backend APIs.
+
+The public repository focuses on architecture, contracts, tests, and deterministic local behavior. It intentionally avoids production credentials, private prompts, client data, and proprietary workflows.
+
+## What It Does
+
+- Generates structured process documents from business context.
+- Converts ordered workflow steps into Mermaid diagrams.
+- Exposes backend APIs for generation, template discovery, job lookup, and health checks.
+- Provides a FastAPI AI service with health/readiness endpoints, prompt templates, mock provider support, and retrieval interfaces.
+- Includes PostgreSQL-oriented JPA entities, Flyway migrations, and pgvector adapter boundaries.
+- Uses deterministic local generation paths so the project can run safely without real LLM credentials.
+- Documents architecture using only synthetic examples.
+
+## Architecture
 
 ```mermaid
 flowchart LR
@@ -31,37 +59,9 @@ flowchart LR
     Backend --> Mermaid[Mermaid Workflow Output]
 ```
 
-The current public version prioritizes backend API structure, testable local behavior, and public-safe AI-layer scaffolding. The backend uses local deterministic generation for the implemented endpoints; the AI service contains the prompt orchestration and retrieval pieces needed to evolve the integration without committing provider credentials or private prompts.
+The current implementation prioritizes backend API structure, local testability, and public-safe AI-layer scaffolding. Backend endpoints use deterministic generation today; the AI service contains the orchestration, prompt rendering, and retrieval boundaries needed to evolve toward real provider-backed generation.
 
-## Key Features
-
-- Document generation endpoint with validation-friendly request DTOs.
-- Workflow diagram endpoint that converts step definitions into Mermaid.
-- Generation job and template registry APIs.
-- Spring Security resource-server skeleton with local demo mode disabled by default.
-- Correlation ID support and log masking for sensitive header/value names.
-- FastAPI service health/readiness endpoints.
-- Versioned prompt templates for document and workflow generation.
-- Mock LLM provider for credential-free local development.
-- In-memory retrieval and pgvector adapter boundaries.
-- Docker Compose support for local PostgreSQL and backend startup.
-
-## Tech Stack
-
-| Layer | Technology |
-| --- | --- |
-| Backend API | Java 21, Spring Boot 3.5, Spring Web, Validation |
-| Persistence | PostgreSQL, JPA, Flyway |
-| Security | Spring Security, OAuth2 resource-server skeleton |
-| API Docs | springdoc OpenAPI / Swagger UI |
-| AI Service | Python, FastAPI, Pydantic |
-| AI Orchestration | Prompt renderer, mock provider, provider interface |
-| Retrieval | In-memory retriever, pgvector adapter |
-| Diagrams | Mermaid |
-| Local Runtime | Docker Compose |
-| CI | GitHub Actions for Python and Java checks |
-
-## Request Flow
+### Request Flow
 
 ```mermaid
 sequenceDiagram
@@ -79,7 +79,7 @@ sequenceDiagram
     Backend-->>Client: 200 ApiResponse
 ```
 
-## AI Pipeline
+### AI Pipeline
 
 ```mermaid
 flowchart TD
@@ -90,13 +90,28 @@ flowchart TD
     Validate --> Output[Document or Workflow Content]
 ```
 
-The AI service currently supports this pipeline through application code and tests without requiring real model credentials. Local defaults use mock provider behavior so contributors can run checks safely.
+Local defaults use mock provider behavior so contributors can run checks without API keys or external services.
 
-## Backend API Overview
+## Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| Backend API | Java 21, Spring Boot 3.5, Spring Web, Bean Validation |
+| Persistence | PostgreSQL, JPA, Flyway |
+| Security | Spring Security, OAuth2 resource-server skeleton |
+| API Docs | springdoc OpenAPI, Swagger UI |
+| AI Service | Python, FastAPI, Pydantic |
+| AI Orchestration | Prompt renderer, provider interface, mock provider |
+| Retrieval | In-memory retriever, pgvector adapter boundary |
+| Diagrams | Mermaid |
+| Local Runtime | Docker Compose |
+| CI | GitHub Actions for Java and Python checks |
+
+## API Overview
 
 | Endpoint | Purpose |
 | --- | --- |
-| `GET /api/v1/health` | Backend health metadata |
+| `GET /api/v1/health` | Return backend health metadata |
 | `POST /api/v1/documents/generate` | Generate a structured document from process context |
 | `POST /api/v1/workflows/diagram` | Generate a Mermaid workflow diagram from ordered steps |
 | `GET /api/v1/generation-jobs/{jobId}` | Retrieve generation job metadata |
@@ -104,9 +119,9 @@ The AI service currently supports this pipeline through application code and tes
 
 Swagger UI is available at `http://localhost:8080/swagger-ui.html` when the backend is running.
 
-## Sample Input/Output
+## Example Requests
 
-Document request:
+### Document Generation
 
 ```json
 {
@@ -117,7 +132,7 @@ Document request:
 }
 ```
 
-Document response shape:
+Example response shape:
 
 ```json
 {
@@ -132,21 +147,36 @@ Document response shape:
 }
 ```
 
-Workflow request:
+### Workflow Diagram Generation
 
 ```json
 {
   "title": "Vendor Approval Workflow",
   "steps": [
-    {"id": "intake", "label": "Submit vendor intake form", "nextStepId": "procurement_review"},
-    {"id": "procurement_review", "label": "Procurement reviews risk", "nextStepId": "finance_review"},
-    {"id": "finance_review", "label": "Finance validates payment details", "nextStepId": "approval"},
-    {"id": "approval", "label": "Approve vendor"}
+    {
+      "id": "intake",
+      "label": "Submit vendor intake form",
+      "nextStepId": "procurement_review"
+    },
+    {
+      "id": "procurement_review",
+      "label": "Procurement reviews risk",
+      "nextStepId": "finance_review"
+    },
+    {
+      "id": "finance_review",
+      "label": "Finance validates payment details",
+      "nextStepId": "approval"
+    },
+    {
+      "id": "approval",
+      "label": "Approve vendor"
+    }
   ]
 }
 ```
 
-Mermaid output shape:
+Generated Mermaid output:
 
 ```mermaid
 flowchart TD
@@ -159,17 +189,26 @@ flowchart TD
     finance_review --> approval
 ```
 
-Additional synthetic examples:
+Additional synthetic samples:
 
 - [Document request](samples/input/process-document-request.sample.json)
+- [Alternative document request](samples/input/document-request.sample.json)
 - [Workflow diagram request](samples/input/workflow-diagram-request.sample.json)
 - [Generated document](samples/output/generated-document.sample.md)
 - [Workflow diagram](samples/output/workflow-diagram.sample.mmd)
 - [API response examples](samples/output/api-response.sample.json)
 
-## Local Setup
+## Local Development
 
-Run the AI service:
+### Run Everything With Docker Compose
+
+```bash
+docker compose up --build
+```
+
+This starts the local runtime defined in `docker-compose.yml`, including PostgreSQL and the application services.
+
+### Run the AI Service Locally
 
 ```bash
 cd ai-service
@@ -182,7 +221,7 @@ pytest -v
 uvicorn app.main:app --reload
 ```
 
-Run backend checks and application:
+### Run the Backend Locally
 
 ```bash
 cd backend
@@ -190,36 +229,44 @@ mvn test
 mvn spring-boot:run
 ```
 
-Run PostgreSQL, the AI service, and the backend with Docker Compose:
-
-```bash
-docker compose up --build
-```
+The backend starts on port `8080` by default.
 
 ## Testing
 
 The CI workflow validates both services:
 
-- AI service: install dependencies, compile `app` and `tests`, run `pytest -v`.
-- Backend: set up Java 21 and run `mvn test`.
+| Service | Checks |
+| --- | --- |
+| AI service | Install dependencies, compile `app` and `tests`, run `pytest -v` |
+| Backend | Set up Java 21, run `mvn test` |
 
-The test suites are designed to use local/mock behavior and should not require real LLM credentials.
+Tests are designed around local and mock behavior. They should not require real LLM credentials.
 
-## Public Repository Disclaimer
+## Project Structure
 
-This repository is a sanitized public portfolio version built with synthetic examples and generic workflows. It does not contain proprietary business logic, client data, production credentials, internal prompts, private documents, or company-specific assets.
+```text
+.
+|-- ai-service/              # FastAPI AI orchestration service
+|-- backend/                 # Spring Boot backend API
+|-- docs/                    # Architecture and design documentation
+|-- samples/                 # Synthetic request and response examples
+|-- docker-compose.yml       # Local service orchestration
+|-- migration.md             # Migration and project notes
+|-- README.md                # Project overview
+|-- SECURITY.md              # Security reporting notes
+```
 
-## Design Decisions
+## Design Notes
 
-- **Spring Boot backend:** keeps API design, validation, persistence, OpenAPI, and security concerns in a mature enterprise stack.
-- **FastAPI AI service:** isolates AI orchestration and provider-specific concerns from backend business APIs.
-- **Separate services:** allows the AI layer to evolve independently while the backend owns API contracts and persistence.
-- **PostgreSQL and pgvector:** supports normal metadata storage and vector retrieval with one operational database family.
+- **Spring Boot backend:** owns API contracts, validation, persistence, OpenAPI, and security boundaries.
+- **FastAPI AI service:** isolates prompt rendering, provider concerns, and retrieval logic from backend APIs.
+- **Service separation:** allows AI orchestration to evolve independently from core backend contracts.
+- **PostgreSQL and pgvector:** keeps metadata and vector retrieval in one operational database family.
 - **Mermaid diagrams:** produces text-first workflow diagrams that are easy to diff, review, and render in GitHub.
-- **Mock provider:** makes tests and local demos deterministic without real API keys.
-- **Versioned prompts:** keeps prompt behavior explicit and reviewable.
+- **Mock provider:** keeps tests and local demos deterministic without API keys.
+- **Versioned prompts:** makes prompt behavior explicit and reviewable.
 
-More detail:
+## Documentation
 
 - [System architecture](docs/architecture.md)
 - [Backend architecture](docs/backend-architecture.md)
@@ -231,19 +278,23 @@ More detail:
 - [Design decisions](docs/design-decisions.md)
 - [Roadmap](docs/roadmap.md)
 
+## Public Repository Disclaimer
+
+This repository is a sanitized public portfolio version built with synthetic examples and generic workflows. It does not contain proprietary business logic, client data, production credentials, internal prompts, private documents, or company-specific assets.
+
 ## Trade-Offs
 
-- The public version favors deterministic local behavior over real provider calls, so reviewers can run it safely.
-- The backend currently returns synchronous generation responses; asynchronous queues would be a better fit for long-running production generation.
-- Retrieval code is intentionally lightweight in the public version and avoids real private documents.
-- The FastAPI service has orchestration primitives, but the backend-to-AI-service HTTP integration is not yet fully wired into the public endpoints.
+- The public version favors deterministic local behavior over real provider calls so reviewers can run it safely.
+- Backend generation responses are currently synchronous; queue-backed processing would fit longer production workloads better.
+- Retrieval code is intentionally lightweight and avoids real private documents.
+- The FastAPI service has orchestration primitives, but backend-to-AI-service HTTP integration is not fully wired into the public endpoints yet.
 
 ## Roadmap
 
 - Wire backend generation services to the FastAPI AI service through a resilient HTTP client.
 - Add async generation jobs with queue-backed processing.
 - Expand sample outputs for more compliance-style document types.
-- Add document export formats such as Markdown, PDF, and DOCX.
+- Add export formats such as Markdown, PDF, and DOCX.
 - Add retrieval quality scoring and prompt evaluation fixtures.
 - Introduce rate limiting, authentication hardening, and observability dashboards.
 - Add Testcontainers-backed integration tests for PostgreSQL.
