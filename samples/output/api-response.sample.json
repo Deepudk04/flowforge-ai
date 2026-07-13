@@ -1,0 +1,36 @@
+{
+  "documentGeneration": {
+    "success": true,
+    "data": {
+      "documentId": "doc_00000000-0000-0000-0000-000000000000",
+      "title": "Vendor Approval SOP",
+      "documentType": "standard-operating-procedure",
+      "content": "# Vendor Approval SOP\n\nA requester submits a vendor intake form. Procurement reviews risk, finance validates payment details, and legal reviews contract terms before approval. Approved vendors are added to the vendor master and reviewed annually.",
+      "status": "COMPLETED",
+      "createdAt": "2026-07-09T00:00:00Z"
+    },
+    "error": null
+  },
+  "workflowDiagram": {
+    "success": true,
+    "data": {
+      "workflowId": "workflow_00000000-0000-0000-0000-000000000000",
+      "title": "Vendor Approval Workflow",
+      "mermaid": "flowchart TD\n    intake[Submit vendor intake form]\n    procurement_review[Procurement reviews risk]\n    finance_review[Finance validates payment details]\n    legal_review[Legal reviews contract terms]\n    approval[Approve vendor]\n    intake --> procurement_review\n    procurement_review --> finance_review\n    finance_review --> legal_review\n    legal_review --> approval",
+      "warnings": []
+    },
+    "error": null
+  },
+  "generationJob": {
+    "success": true,
+    "data": {
+      "jobId": "job_demo_vendor_approval",
+      "status": "COMPLETED",
+      "resourceType": "document",
+      "resourceId": "SampleDocument",
+      "createdAt": "2026-07-09T00:00:00Z",
+      "updatedAt": "2026-07-09T00:00:00Z"
+    },
+    "error": null
+  }
+}

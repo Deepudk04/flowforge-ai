@@ -1,5 +1,5 @@
 ﻿from app.config import Settings, get_settings
-from app.models import DocumentGenerationRequest, GenerationResult
+from app.models import DocumentGenerationRequest, GenerationResult, RetrievalContext
 from app.orchestrator import AIOrchestrator
 from app.retrieval import DocumentChunk, InMemoryRetriever, RetrievalRequest
 
@@ -25,12 +25,12 @@ class DocumentGenerationPipeline:
         enriched = request.model_copy(
             update={
                 "retrieval_context": [
-                    {
-                        "source_id": result.chunk.chunk_id,
-                        "title": result.chunk.title,
-                        "content": result.chunk.content,
-                        "score": result.score,
-                    }
+                    RetrievalContext(
+                        source_id=result.chunk.chunk_id,
+                        title=result.chunk.title,
+                        content=result.chunk.content,
+                        score=result.score,
+                    )
                     for result in retrieval_results
                 ]
             }
