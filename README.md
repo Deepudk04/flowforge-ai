@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Deepudk04/flowforge-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/Deepudk04/flowforge-ai/actions/workflows/ci.yml)
 
-FlowForge AI is a enterprise-style AI platform for generating structured process documents, compliance-style documentation, and Mermaid workflow diagrams from business process inputs.
+FlowForge AI is an enterprise-style AI platform for generating structured process documents, compliance-style documentation, and Mermaid workflow diagrams from business process inputs.
 
 The project combines a Spring Boot backend, a FastAPI AI service, prompt orchestration, retrieval interfaces, PostgreSQL/pgvector boundaries, deterministic local generation, and synthetic examples that are safe to run without private data or real LLM credentials.
 
