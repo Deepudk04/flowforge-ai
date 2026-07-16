@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.flowforge.documents.service.DocumentGenerationService;
+import com.flowforge.integration.LocalAiServiceClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,8 +17,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(DocumentGenerationController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@Import(DocumentGenerationService.class)
-@TestPropertySource(properties = "flowforge.security.enabled=false")
+@Import({DocumentGenerationService.class, LocalAiServiceClient.class})
+@TestPropertySource(properties = {
+        "flowforge.security.enabled=false",
+        "flowforge.ai-service.mode=local"
+})
 class DocumentGenerationControllerTest {
     @Autowired
     private MockMvc mockMvc;

@@ -2,9 +2,11 @@ package com.flowforge.integration;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(prefix = "flowforge.ai-service", name = "mode", havingValue = "local")
 public class LocalAiServiceClient implements AiServiceClient {
     @Override
     public DocumentGenerationResult generateDocument(DocumentGenerationCommand command) {

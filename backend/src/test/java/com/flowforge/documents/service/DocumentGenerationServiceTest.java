@@ -3,13 +3,14 @@ package com.flowforge.documents.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.flowforge.documents.dto.DocumentDtos.DocumentGenerationRequest;
+import com.flowforge.integration.LocalAiServiceClient;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class DocumentGenerationServiceTest {
     @Test
     void generateReturnsCompletedDocument() {
-        var service = new DocumentGenerationService();
+        var service = new DocumentGenerationService(new LocalAiServiceClient());
         var request = new DocumentGenerationRequest("SampleDocument", "document", "DemoClient provided input.", List.of("sample"));
 
         var response = service.generate(request);

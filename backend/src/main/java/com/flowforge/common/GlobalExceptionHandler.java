@@ -1,5 +1,6 @@
 package com.flowforge.common;
 
+import com.flowforge.integration.AiServiceException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.List;
@@ -29,6 +30,11 @@ public class GlobalExceptionHandler {
                 .map(this::toValidationError)
                 .toList();
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_FAILED", "Request validation failed", request, validationErrors);
+    }
+
+    @ExceptionHandler(AiServiceException.class)
+    ResponseEntity<ApiResponse<Void>> handleAiService(AiServiceException exception, HttpServletRequest request) {
+        return error(exception.status(), exception.code(), exception.getMessage(), request, List.of());
     }
 
     @ExceptionHandler(Exception.class)

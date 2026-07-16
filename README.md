@@ -287,11 +287,10 @@ This repository is a sanitized public portfolio version built with synthetic exa
 - The public version favors deterministic local behavior over real provider calls so reviewers can run it safely.
 - Backend generation responses are currently synchronous; queue-backed processing would fit longer production workloads better.
 - Retrieval code is intentionally lightweight and avoids real private documents.
-- The FastAPI service has orchestration primitives, but backend-to-AI-service HTTP integration is not fully wired into the public endpoints yet.
+- Backend generation uses the FastAPI AI service over HTTP by default; deterministic local generation remains available with `AI_SERVICE_MODE=local`.
 
 ## Roadmap
 
-- Wire backend generation services to the FastAPI AI service through a resilient HTTP client.
 - Add async generation jobs with queue-backed processing.
 - Expand sample outputs for more compliance-style document types.
 - Add export formats such as Markdown, PDF, and DOCX.

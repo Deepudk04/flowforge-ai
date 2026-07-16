@@ -23,5 +23,8 @@ flowforge:
     enabled: ${FLOWFORGE_SECURITY_ENABLED:false}
     audience: ${JWT_AUDIENCE:flowforge-api}
   ai-service:
+    mode: ${AI_SERVICE_MODE:http}
     base-url: ${AI_SERVICE_BASE_URL:http://localhost:8000}
     timeout-ms: ${AI_SERVICE_TIMEOUT_MS:30000}
+    retry-attempts: ${AI_SERVICE_RETRY_ATTEMPTS:3}
+    retry-backoff-ms: ${AI_SERVICE_RETRY_BACKOFF_MS:250}

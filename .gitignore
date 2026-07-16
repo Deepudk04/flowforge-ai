@@ -22,3 +22,5 @@ target/
 
 .mvn/wrapper/maven-wrapper.jar
 migration.md
+.idea/
+docs/roadmap.md

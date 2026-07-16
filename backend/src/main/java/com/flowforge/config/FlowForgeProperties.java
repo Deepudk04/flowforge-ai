@@ -20,8 +20,11 @@ public record FlowForgeProperties(
     }
 
     public record AiService(
+            @NotBlank String mode,
             @NotBlank String baseUrl,
-            @Min(1000) int timeoutMs
+            @Min(1000) int timeoutMs,
+            @Min(1) int retryAttempts,
+            @Min(0) long retryBackoffMs
     ) {
     }
 }

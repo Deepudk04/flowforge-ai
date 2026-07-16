@@ -18,8 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
         "flowforge.security.audience=flowforge-api",
         "flowforge.api-base-path=/api/v1",
         "flowforge.frontend-origin=http://localhost:5173",
+        "flowforge.ai-service.mode=http",
         "flowforge.ai-service.base-url=http://localhost:8000",
-        "flowforge.ai-service.timeout-ms=30000"
+        "flowforge.ai-service.timeout-ms=30000",
+        "flowforge.ai-service.retry-attempts=3",
+        "flowforge.ai-service.retry-backoff-ms=250"
 })
 class SecurityConfigTest {
     @Autowired
