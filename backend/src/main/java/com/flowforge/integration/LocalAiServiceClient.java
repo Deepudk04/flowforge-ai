@@ -10,7 +10,44 @@ import org.springframework.stereotype.Component;
 public class LocalAiServiceClient implements AiServiceClient {
     @Override
     public DocumentGenerationResult generateDocument(DocumentGenerationCommand command) {
-        var content = "# " + command.title() + "\n\n" + command.inputContext();
+        var content = """
+                # %s
+
+                ## Objective
+                Produce a synthetic %s from the supplied process context.
+
+                ## Scope
+                %s
+
+                ## Procedure
+                1. Confirm the request owner and expected business outcome.
+                2. Validate required inputs before work begins.
+                3. Execute the process steps using only approved systems.
+                4. Record completion evidence and unresolved exceptions.
+
+                ## Assumptions
+                - Source material is synthetic and safe for public demonstration.
+                - Missing owners, systems, and dates require follow-up before production use.
+
+                ## Risks
+                - Incomplete context can produce gaps in the generated procedure.
+                - Manual handoffs should be reviewed for control and audit coverage.
+
+                ## Owners
+                - Request owner: Demo process owner.
+                - Reviewer: Demo compliance reviewer.
+
+                ## Review Checklist
+                - [ ] Inputs are complete.
+                - [ ] Decision points are explicit.
+                - [ ] Exceptions and evidence are documented.
+                - [ ] Tags reviewed: %s
+                """.formatted(
+                command.title(),
+                command.documentType(),
+                command.inputContext(),
+                formatTags(command.tags())
+        );
         return new DocumentGenerationResult(content, "local-mock", List.of());
     }
 
@@ -43,5 +80,12 @@ public class LocalAiServiceClient implements AiServiceClient {
 
     private String sanitizeLabel(String value) {
         return value.replace('[', '(').replace(']', ')').replace('\n', ' ').trim();
+    }
+
+    private String formatTags(List<String> tags) {
+        if (tags == null || tags.isEmpty()) {
+            return "none";
+        }
+        return String.join(", ", tags);
     }
 }

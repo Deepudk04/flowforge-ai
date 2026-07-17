@@ -39,7 +39,7 @@ The public repository focuses on architecture, contracts, tests, and determinist
 
 - Generates structured process documents from business context.
 - Converts ordered workflow steps into Mermaid diagrams.
-- Exposes backend APIs for generation, template discovery, job lookup, and health checks.
+- Exposes backend APIs for generation, persisted output lookup, template discovery, job lookup, and health checks.
 - Provides a FastAPI AI service with health/readiness endpoints, prompt templates, mock provider support, and retrieval interfaces.
 - Includes PostgreSQL-oriented JPA entities, Flyway migrations, and pgvector adapter boundaries.
 - Uses deterministic local generation paths so the project can run safely without real LLM credentials.
@@ -59,7 +59,7 @@ flowchart LR
     Backend --> Mermaid[Mermaid Workflow Output]
 ```
 
-The current implementation prioritizes backend API structure, local testability, and public-safe AI-layer scaffolding. Backend endpoints use deterministic generation today; the AI service contains the orchestration, prompt rendering, and retrieval boundaries needed to evolve toward real provider-backed generation.
+The current implementation prioritizes backend API structure, local testability, and public-safe AI-layer scaffolding. Backend endpoints call the FastAPI AI service by default, persist generated outputs and job metadata, and can use deterministic local mode for isolated tests.
 
 ### Request Flow
 
@@ -74,8 +74,10 @@ sequenceDiagram
     Client->>Backend: POST /api/v1/documents/generate
     Backend->>Backend: Validate request
     Backend->>Service: Generate document
-    Service->>Output: Build deterministic local result
-    Service-->>Backend: Document response
+    Service->>Store: Create generation job
+    Service->>Output: Request AI service output
+    Service->>Store: Save generated document and complete job
+    Service-->>Backend: Document response with jobId
     Backend-->>Client: 200 ApiResponse
 ```
 
@@ -113,7 +115,9 @@ Local defaults use mock provider behavior so contributors can run checks without
 | --- | --- |
 | `GET /api/v1/health` | Return backend health metadata |
 | `POST /api/v1/documents/generate` | Generate a structured document from process context |
+| `GET /api/v1/documents/{documentId}` | Retrieve a persisted generated document |
 | `POST /api/v1/workflows/diagram` | Generate a Mermaid workflow diagram from ordered steps |
+| `GET /api/v1/workflows/{workflowId}` | Retrieve a persisted workflow diagram |
 | `GET /api/v1/generation-jobs/{jobId}` | Retrieve generation job metadata |
 | `GET /api/v1/templates` | List available public-safe generation templates |
 
@@ -142,7 +146,8 @@ Example response shape:
     "documentType": "standard-operating-procedure",
     "content": "# Vendor Approval SOP\n\nA requester submits...",
     "status": "COMPLETED",
-    "createdAt": "2026-07-09T00:00:00Z"
+    "createdAt": "2026-07-09T00:00:00Z",
+    "jobId": "job_..."
   }
 }
 ```
@@ -296,4 +301,3 @@ This repository is a sanitized public portfolio version built with synthetic exa
 - Add export formats such as Markdown, PDF, and DOCX.
 - Add retrieval quality scoring and prompt evaluation fixtures.
 - Introduce rate limiting, authentication hardening, and observability dashboards.
-- Add Testcontainers-backed integration tests for PostgreSQL.

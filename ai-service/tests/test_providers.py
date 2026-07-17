@@ -20,7 +20,9 @@ def test_mock_provider_returns_usage_trace():
     assert response.usage.model == "flowforge-local-mock"
     assert response.usage.input_tokens > 0
     assert response.usage.output_tokens > 0
-    assert "Context items: 1." in response.content
+    assert "## Procedure" in response.content
+    assert "## Review Checklist" in response.content
+    assert "1 context item(s) used." in response.content
 
 
 def test_remote_provider_requires_api_key():

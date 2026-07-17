@@ -25,6 +25,9 @@ public class GeneratedDocument {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
+
     protected GeneratedDocument() {
     }
 
@@ -34,6 +37,7 @@ public class GeneratedDocument {
         this.documentType = documentType;
         this.content = content;
         this.createdAt = createdAt;
+        this.updatedAt = createdAt;
     }
 
     public String getId() {
@@ -42,5 +46,21 @@ public class GeneratedDocument {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }

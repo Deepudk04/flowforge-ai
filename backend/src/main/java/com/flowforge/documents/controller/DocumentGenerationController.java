@@ -5,6 +5,8 @@ import com.flowforge.documents.dto.DocumentDtos.DocumentGenerationRequest;
 import com.flowforge.documents.dto.DocumentDtos.DocumentGenerationResponse;
 import com.flowforge.documents.service.DocumentGenerationService;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +24,10 @@ public class DocumentGenerationController {
     @PostMapping("/generate")
     public ApiResponse<DocumentGenerationResponse> generate(@Valid @RequestBody DocumentGenerationRequest request) {
         return ApiResponse.ok(service.generate(request));
+    }
+
+    @GetMapping("/{documentId}")
+    public ApiResponse<DocumentGenerationResponse> getDocument(@PathVariable String documentId) {
+        return ApiResponse.ok(service.getDocument(documentId));
     }
 }

@@ -20,6 +20,7 @@ class LocalAiServiceClientTest {
 
         assertThat(result.model()).isEqualTo("local-mock");
         assertThat(result.content()).contains("SampleDocument", "DemoClient provided input.");
+        assertThat(result.content()).contains("## Procedure", "## Risks", "## Review Checklist");
     }
 
     @Test

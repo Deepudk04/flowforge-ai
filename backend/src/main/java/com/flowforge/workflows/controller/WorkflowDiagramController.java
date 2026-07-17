@@ -5,6 +5,8 @@ import com.flowforge.workflows.dto.WorkflowDtos.WorkflowDiagramRequest;
 import com.flowforge.workflows.dto.WorkflowDtos.WorkflowDiagramResponse;
 import com.flowforge.workflows.service.WorkflowDiagramService;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +24,10 @@ public class WorkflowDiagramController {
     @PostMapping("/diagram")
     public ApiResponse<WorkflowDiagramResponse> generate(@Valid @RequestBody WorkflowDiagramRequest request) {
         return ApiResponse.ok(service.generate(request));
+    }
+
+    @GetMapping("/{workflowId}")
+    public ApiResponse<WorkflowDiagramResponse> getWorkflow(@PathVariable String workflowId) {
+        return ApiResponse.ok(service.getWorkflow(workflowId));
     }
 }

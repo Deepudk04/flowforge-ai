@@ -41,7 +41,30 @@ Success response:
     "documentType": "standard-operating-procedure",
     "content": "# Vendor Approval SOP\n\nA requester submits a vendor intake form. Procurement reviews risk, finance validates payment details, and legal reviews contract terms before approval.",
     "status": "COMPLETED",
-    "createdAt": "2026-07-09T00:00:00Z"
+    "createdAt": "2026-07-09T00:00:00Z",
+    "jobId": "job_00000000-0000-0000-0000-000000000000"
+  },
+  "error": null
+}
+```
+
+## GET /api/v1/documents/{documentId}
+
+Returns a persisted generated document and its associated generation job status.
+
+Success response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "documentId": "doc_00000000-0000-0000-0000-000000000000",
+    "title": "Vendor Approval SOP",
+    "documentType": "standard-operating-procedure",
+    "content": "# Vendor Approval SOP\n\n...",
+    "status": "COMPLETED",
+    "createdAt": "2026-07-09T00:00:00Z",
+    "jobId": "job_00000000-0000-0000-0000-000000000000"
   },
   "error": null
 }
@@ -111,7 +134,32 @@ Success response:
     "workflowId": "workflow_00000000-0000-0000-0000-000000000000",
     "title": "Vendor Approval Workflow",
     "mermaid": "flowchart TD\n    intake[Submit vendor intake form]\n    procurement_review[Procurement reviews risk]\n    finance_review[Finance validates payment details]\n    approval[Approve vendor]\n    intake --> procurement_review\n    procurement_review --> finance_review\n    finance_review --> approval",
-    "warnings": []
+    "warnings": [],
+    "status": "COMPLETED",
+    "createdAt": "2026-07-09T00:00:00Z",
+    "jobId": "job_00000000-0000-0000-0000-000000000000"
+  },
+  "error": null
+}
+```
+
+## GET /api/v1/workflows/{workflowId}
+
+Returns a persisted workflow diagram and its associated generation job status.
+
+Success response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "workflowId": "workflow_00000000-0000-0000-0000-000000000000",
+    "title": "Vendor Approval Workflow",
+    "mermaid": "flowchart TD\n    intake[Submit vendor intake form]",
+    "warnings": [],
+    "status": "COMPLETED",
+    "createdAt": "2026-07-09T00:00:00Z",
+    "jobId": "job_00000000-0000-0000-0000-000000000000"
   },
   "error": null
 }
@@ -152,7 +200,7 @@ Success response:
     "jobId": "job_demo_vendor_approval",
     "status": "COMPLETED",
     "resourceType": "document",
-    "resourceId": "SampleDocument",
+    "resourceId": "doc_00000000-0000-0000-0000-000000000000",
     "createdAt": "2026-07-09T00:00:00Z",
     "updatedAt": "2026-07-09T00:00:00Z"
   },

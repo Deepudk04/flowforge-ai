@@ -23,7 +23,8 @@ public final class DocumentDtos {
             String documentType,
             String content,
             String status,
-            Instant createdAt
+            Instant createdAt,
+            String jobId
     ) {
     }
 

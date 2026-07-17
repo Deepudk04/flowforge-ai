@@ -31,6 +31,8 @@ class AIOrchestrator:
                 instruction="Draft a document using the rendered prompt.",
                 user_content=prompt,
                 context=context,
+                artifact_title=request.document_id,
+                artifact_scope=request.source_text,
             )
         )
         return GenerationResult(
@@ -56,6 +58,8 @@ class AIOrchestrator:
                 instruction="Draft a workflow response using the rendered prompt.",
                 user_content=prompt,
                 context=context,
+                artifact_title=request.title,
+                procedure_items=request.steps,
             )
         )
         return GenerationResult(

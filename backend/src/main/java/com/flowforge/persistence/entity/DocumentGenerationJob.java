@@ -25,6 +25,12 @@ public class DocumentGenerationJob {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
+
+    @Column(name = "failure_message", columnDefinition = "text")
+    private String failureMessage;
+
     protected DocumentGenerationJob() {
     }
 
@@ -34,6 +40,7 @@ public class DocumentGenerationJob {
         this.resourceType = resourceType;
         this.resourceId = resourceId;
         this.createdAt = createdAt;
+        this.updatedAt = createdAt;
     }
 
     public String getId() {
@@ -42,5 +49,43 @@ public class DocumentGenerationJob {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getResourceType() {
+        return resourceType;
+    }
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getFailureMessage() {
+        return failureMessage;
+    }
+
+    public void markRunning(Instant updatedAt) {
+        this.status = "RUNNING";
+        this.updatedAt = updatedAt;
+    }
+
+    public void markCompleted(String resourceId, Instant updatedAt) {
+        this.status = "COMPLETED";
+        this.resourceId = resourceId;
+        this.updatedAt = updatedAt;
+        this.failureMessage = null;
+    }
+
+    public void markFailed(String failureMessage, Instant updatedAt) {
+        this.status = "FAILED";
+        this.updatedAt = updatedAt;
+        this.failureMessage = failureMessage;
     }
 }
