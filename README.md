@@ -19,7 +19,6 @@ The project combines a Spring Boot backend, a FastAPI AI service, prompt orchest
 - [Project Structure](#project-structure)
 - [Design Notes](#design-notes)
 - [Documentation](#documentation)
-- [Roadmap](#roadmap)
 
 ## Why It Exists
 
@@ -281,8 +280,6 @@ Tests are designed around local and mock behavior. They should not require real 
 - [Security notes](docs/security.md)
 - [Local development](docs/local-development.md)
 - [Design decisions](docs/design-decisions.md)
-- [Flagship implementation plan](docs/flagship-implementation-plan.md)
-- [Roadmap](docs/roadmap.md)
 
 ## Public Repository Disclaimer
 
@@ -294,11 +291,3 @@ This repository is a sanitized public portfolio version built with synthetic exa
 - Backend generation responses are currently synchronous; queue-backed processing would fit longer production workloads better.
 - Retrieval code is intentionally lightweight and avoids real private documents.
 - Backend generation uses the FastAPI AI service over HTTP by default; deterministic local generation remains available with `AI_SERVICE_MODE=local`.
-
-## Roadmap
-
-- Add async generation jobs with queue-backed processing.
-- Expand sample outputs for more compliance-style document types.
-- Add export formats such as Markdown, PDF, and DOCX.
-- Add retrieval quality scoring and prompt evaluation fixtures.
-- Introduce rate limiting, authentication hardening, and observability dashboards.
