@@ -11,8 +11,8 @@
 
 ```bash
 cd backend
-mvn test
-mvn spring-boot:run
+./mvnw test
+./mvnw spring-boot:run
 ```
 
 Useful environment variables:
@@ -78,6 +78,6 @@ Run these before committing when tools are available:
 ```bash
 git diff --check
 gitleaks detect --source .
-cd backend && mvn test
+cd backend && ./mvnw test
 cd ai-service && python -m compileall app tests && pytest -v
 ```

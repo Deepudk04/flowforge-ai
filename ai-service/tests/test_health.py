@@ -24,8 +24,7 @@ def test_ready_uses_public_safe_defaults():
     assert response.status_code == 200
     body = response.json()
     assert body["llmProvider"] == "mock"
-    assert body["llmConfigured"] is True
-    assert body["defaultModel"] == "flowforge-local-mock"
+    assert body["model"] == "flowforge-local-mock"
     assert body["embeddingProvider"] == "mock"
     assert body["embeddingModel"] == "flowforge-local-embedding"
     assert body["retrievalBackend"] == "memory"

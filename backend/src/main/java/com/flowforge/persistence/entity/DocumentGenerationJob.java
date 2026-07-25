@@ -1,7 +1,10 @@
 package com.flowforge.persistence.entity;
 
+import com.flowforge.jobs.model.GenerationJobStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.Instant;
@@ -14,7 +17,8 @@ public class DocumentGenerationJob {
     private String id;
 
     @Column(name = "status", nullable = false, length = 40)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private GenerationJobStatus status;
 
     @Column(name = "resource_type", nullable = false, length = 40)
     private String resourceType;
@@ -34,7 +38,13 @@ public class DocumentGenerationJob {
     protected DocumentGenerationJob() {
     }
 
-    public DocumentGenerationJob(String id, String status, String resourceType, String resourceId, Instant createdAt) {
+    public DocumentGenerationJob(
+            String id,
+            GenerationJobStatus status,
+            String resourceType,
+            String resourceId,
+            Instant createdAt
+    ) {
         this.id = id;
         this.status = status;
         this.resourceType = resourceType;
@@ -47,7 +57,7 @@ public class DocumentGenerationJob {
         return id;
     }
 
-    public String getStatus() {
+    public GenerationJobStatus getStatus() {
         return status;
     }
 
@@ -72,20 +82,28 @@ public class DocumentGenerationJob {
     }
 
     public void markRunning(Instant updatedAt) {
-        this.status = "RUNNING";
-        this.updatedAt = updatedAt;
+        transitionTo(GenerationJobStatus.RUNNING, updatedAt);
     }
 
     public void markCompleted(String resourceId, Instant updatedAt) {
-        this.status = "COMPLETED";
+        if (resourceId == null || resourceId.isBlank()) {
+            throw new IllegalArgumentException("Completed generation jobs require a resource ID.");
+        }
+        transitionTo(GenerationJobStatus.COMPLETED, updatedAt);
         this.resourceId = resourceId;
-        this.updatedAt = updatedAt;
         this.failureMessage = null;
     }
 
     public void markFailed(String failureMessage, Instant updatedAt) {
-        this.status = "FAILED";
-        this.updatedAt = updatedAt;
+        transitionTo(GenerationJobStatus.FAILED, updatedAt);
         this.failureMessage = failureMessage;
+    }
+
+    private void transitionTo(GenerationJobStatus target, Instant transitionTime) {
+        if (!status.canTransitionTo(target)) {
+            throw new IllegalStateException("Invalid generation job transition: " + status + " -> " + target);
+        }
+        this.status = target;
+        this.updatedAt = transitionTime;
     }
 }

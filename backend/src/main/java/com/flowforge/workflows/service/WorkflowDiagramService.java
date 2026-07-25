@@ -8,6 +8,7 @@ import com.flowforge.persistence.entity.DocumentGenerationJob;
 import com.flowforge.persistence.entity.WorkflowDiagram;
 import com.flowforge.persistence.repository.DocumentGenerationJobRepository;
 import com.flowforge.persistence.repository.WorkflowDiagramRepository;
+import com.flowforge.persistence.service.GenerationPersistenceService;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -19,42 +20,42 @@ public class WorkflowDiagramService {
     private final AiServiceClient aiServiceClient;
     private final WorkflowDiagramRepository workflowRepository;
     private final DocumentGenerationJobRepository jobRepository;
+    private final GenerationPersistenceService persistenceService;
 
     public WorkflowDiagramService(
             AiServiceClient aiServiceClient,
             WorkflowDiagramRepository workflowRepository,
-            DocumentGenerationJobRepository jobRepository
+            DocumentGenerationJobRepository jobRepository,
+            GenerationPersistenceService persistenceService
     ) {
         this.aiServiceClient = aiServiceClient;
         this.workflowRepository = workflowRepository;
         this.jobRepository = jobRepository;
+        this.persistenceService = persistenceService;
     }
 
     public WorkflowDiagramResponse generate(WorkflowDiagramRequest request) {
         var workflowId = "workflow_" + UUID.randomUUID();
-        var job = createJob("workflow");
+        var jobId = "job_" + UUID.randomUUID();
+        persistenceService.createJob(jobId, "workflow", Instant.now());
         try {
-            job.markRunning(Instant.now());
-            jobRepository.save(job);
+            persistenceService.markRunning(jobId, Instant.now());
             var result = aiServiceClient.generateWorkflowDiagram(new AiServiceClient.WorkflowDiagramCommand(
                     request.title(),
                     request.steps().stream()
                             .map(step -> new AiServiceClient.WorkflowStep(step.id(), step.label(), step.nextStepId()))
                             .toList()
             ));
-            var workflow = workflowRepository.save(new WorkflowDiagram(
+            var completed = persistenceService.completeWorkflow(jobId, new WorkflowDiagram(
                     workflowId,
                     request.title(),
                     result.mermaid(),
                     serializeWarnings(result.warnings()),
                     Instant.now()
-            ));
-            job.markCompleted(workflow.getId(), Instant.now());
-            jobRepository.save(job);
-            return toResponse(workflow, job);
+            ), Instant.now());
+            return toResponse(completed.workflow(), completed.job());
         } catch (RuntimeException exception) {
-            job.markFailed(truncate(exception.getMessage()), Instant.now());
-            jobRepository.save(job);
+            persistFailureWithoutMasking(jobId, exception);
             throw exception;
         }
     }
@@ -64,16 +65,6 @@ public class WorkflowDiagramService {
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow diagram not found: " + workflowId));
         var job = findJob("workflow", workflowId);
         return toResponse(workflow, job);
-    }
-
-    private DocumentGenerationJob createJob(String resourceType) {
-        return jobRepository.save(new DocumentGenerationJob(
-                "job_" + UUID.randomUUID(),
-                "PENDING",
-                resourceType,
-                null,
-                Instant.now()
-        ));
     }
 
     private DocumentGenerationJob findJob(String resourceType, String resourceId) {
@@ -114,5 +105,13 @@ public class WorkflowDiagramService {
             return "Generation failed";
         }
         return message.length() > 500 ? message.substring(0, 500) : message;
+    }
+
+    private void persistFailureWithoutMasking(String jobId, RuntimeException originalException) {
+        try {
+            persistenceService.markFailed(jobId, truncate(originalException.getMessage()), Instant.now());
+        } catch (RuntimeException persistenceException) {
+            originalException.addSuppressed(persistenceException);
+        }
     }
 }

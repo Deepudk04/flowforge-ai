@@ -6,3 +6,6 @@
 *.yml text eol=lf
 *.yaml text eol=lf
 *.mmd text eol=lf
+/backend/mvnw text eol=lf
+/backend/mvnw.cmd text eol=crlf
+/backend/.mvn/wrapper/*.ps1 text eol=crlf

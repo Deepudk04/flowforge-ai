@@ -1,7 +1,7 @@
 ﻿from app.config import Settings, get_settings
 from app.models import DocumentGenerationRequest, GenerationResult, WorkflowGenerationRequest
 from app.prompts import PromptRenderer
-from app.providers import AIProvider, MockAIProvider, ProviderRequest
+from app.providers import AIProvider, ProviderRequest, create_provider
 
 
 class AIOrchestrator:
@@ -12,7 +12,7 @@ class AIOrchestrator:
         prompt_renderer: PromptRenderer | None = None,
     ):
         self.settings = settings or get_settings()
-        self.provider = provider or MockAIProvider(self.settings)
+        self.provider = provider or create_provider(self.settings)
         self.prompt_renderer = prompt_renderer or PromptRenderer()
 
     def generate_document(self, request: DocumentGenerationRequest) -> GenerationResult:

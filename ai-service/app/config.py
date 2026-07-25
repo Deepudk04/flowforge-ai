@@ -5,7 +5,7 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 Environment = Literal["local", "test", "production"]
-ProviderName = Literal["mock", "openai", "anthropic", "gemini", "azure_openai"]
+ProviderName = Literal["mock"]
 RetrievalBackend = Literal["memory", "pgvector"]
 
 
@@ -15,7 +15,6 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
 
     llm_provider: ProviderName = "mock"
-    llm_api_key: str = ""
     default_model: str = "flowforge-local-mock"
     model_timeout_seconds: int = Field(default=30, ge=1, le=300)
 
@@ -28,10 +27,6 @@ class Settings(BaseSettings):
     vector_db_url: str = ""
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore", protected_namespaces=())
-
-    @property
-    def remote_llm_configured(self) -> bool:
-        return self.llm_provider == "mock" or bool(self.llm_api_key)
 
     @property
     def vector_store_configured(self) -> bool:

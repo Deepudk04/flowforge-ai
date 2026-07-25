@@ -2,6 +2,8 @@
 
 
 class InMemoryRetriever:
+    name = "memory"
+
     def __init__(self, chunks: list[DocumentChunk] | None = None):
         self.chunks = chunks or []
 

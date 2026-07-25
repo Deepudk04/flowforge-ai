@@ -2,6 +2,7 @@ package com.flowforge.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.flowforge.jobs.model.GenerationJobStatus;
 import com.flowforge.persistence.entity.DocumentGenerationJob;
 import com.flowforge.persistence.entity.GeneratedDocument;
 import com.flowforge.persistence.entity.WorkflowDiagram;
@@ -20,7 +21,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @DataJpaTest
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class GenerationPersistencePostgresTest {
     @Container
@@ -62,7 +63,14 @@ class GenerationPersistencePostgresTest {
                 "Skipping edge to unknown node: missing",
                 now
         ));
-        var job = new DocumentGenerationJob("job_123", "PENDING", "document", null, now);
+        var job = new DocumentGenerationJob(
+                "job_123",
+                GenerationJobStatus.PENDING,
+                "document",
+                null,
+                now
+        );
+        job.markRunning(now);
         job.markCompleted(document.getId(), now);
         jobRepository.save(job);
 
@@ -74,6 +82,6 @@ class GenerationPersistencePostgresTest {
         assertThat(jobRepository.findFirstByResourceTypeAndResourceIdOrderByCreatedAtDesc("document", "doc_123"))
                 .get()
                 .extracting(DocumentGenerationJob::getStatus)
-                .isEqualTo("COMPLETED");
+                .isEqualTo(GenerationJobStatus.COMPLETED);
     }
 }

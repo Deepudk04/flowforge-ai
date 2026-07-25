@@ -1,18 +1,19 @@
 ﻿from app.config import Settings, get_settings
 from app.models import DocumentGenerationRequest, GenerationResult, RetrievalContext
 from app.orchestrator import AIOrchestrator
-from app.retrieval import DocumentChunk, InMemoryRetriever, RetrievalRequest
+from app.retrieval import DocumentChunk, RetrievalRequest, create_retriever
+from app.retrieval.interfaces import Retriever
 
 
 class DocumentGenerationPipeline:
     def __init__(
         self,
         settings: Settings | None = None,
-        retriever: InMemoryRetriever | None = None,
+        retriever: Retriever | None = None,
         orchestrator: AIOrchestrator | None = None,
     ):
         self.settings = settings or get_settings()
-        self.retriever = retriever or InMemoryRetriever(self._default_chunks())
+        self.retriever = retriever or create_retriever(self.settings, self._default_chunks())
         self.orchestrator = orchestrator or AIOrchestrator(self.settings)
 
     def run(self, request: DocumentGenerationRequest) -> GenerationResult:

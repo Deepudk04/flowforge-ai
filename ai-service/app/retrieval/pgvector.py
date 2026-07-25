@@ -27,6 +27,8 @@ class HashEmbeddingProvider:
 
 
 class PgVectorRetriever:
+    name = "pgvector"
+
     def __init__(
         self,
         settings: Settings | None = None,

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.flowforge.common.ResourceNotFoundException;
+import com.flowforge.jobs.model.GenerationJobStatus;
 import com.flowforge.persistence.entity.DocumentGenerationJob;
 import com.flowforge.persistence.repository.DocumentGenerationJobRepository;
 import java.time.Instant;
@@ -16,7 +17,14 @@ class GenerationJobServiceTest {
     @Test
     void getJobReadsPersistedJob() {
         var repository = mock(DocumentGenerationJobRepository.class);
-        var job = new DocumentGenerationJob("job_123", "PENDING", "document", null, Instant.now());
+        var job = new DocumentGenerationJob(
+                "job_123",
+                GenerationJobStatus.PENDING,
+                "document",
+                null,
+                Instant.now()
+        );
+        job.markRunning(Instant.now());
         job.markCompleted("doc_123", Instant.now());
         when(repository.findById("job_123")).thenReturn(Optional.of(job));
         var service = new GenerationJobService(repository);
@@ -24,7 +32,7 @@ class GenerationJobServiceTest {
         var response = service.getJob("job_123");
 
         assertThat(response.jobId()).isEqualTo("job_123");
-        assertThat(response.status()).isEqualTo("COMPLETED");
+        assertThat(response.status()).isEqualTo(GenerationJobStatus.COMPLETED);
         assertThat(response.resourceType()).isEqualTo("document");
         assertThat(response.resourceId()).isEqualTo("doc_123");
         assertThat(response.updatedAt()).isNotNull();

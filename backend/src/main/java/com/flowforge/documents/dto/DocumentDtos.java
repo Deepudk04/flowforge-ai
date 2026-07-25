@@ -1,5 +1,6 @@
 package com.flowforge.documents.dto;
 
+import com.flowforge.jobs.model.GenerationJobStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
@@ -13,8 +14,11 @@ public final class DocumentDtos {
             @NotBlank @Size(max = 160) String title,
             @NotBlank @Size(max = 80) String documentType,
             @NotBlank @Size(max = 12000) String inputContext,
-            List<@Size(max = 40) String> tags
+            @Size(max = 20) List<@NotBlank @Size(max = 40) String> tags
     ) {
+        public DocumentGenerationRequest {
+            tags = tags == null ? List.of() : tags;
+        }
     }
 
     public record DocumentGenerationResponse(
@@ -22,7 +26,7 @@ public final class DocumentDtos {
             String title,
             String documentType,
             String content,
-            String status,
+            GenerationJobStatus status,
             Instant createdAt,
             String jobId
     ) {

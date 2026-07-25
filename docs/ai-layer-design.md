@@ -12,7 +12,7 @@ The service keeps AI provider calls behind a small provider interface. Applicati
 
 ## Local Defaults
 
-Local runs use the mock provider and in-memory retrieval. pgvector can be enabled later by setting `RETRIEVAL_BACKEND=pgvector` and `VECTOR_DB_URL`.
+Local runs use the mock provider and in-memory retrieval. The retriever factory selects pgvector when `RETRIEVAL_BACKEND=pgvector` and `VECTOR_DB_URL` is configured.
 
 ## Prompt Orchestration
 
@@ -20,8 +20,8 @@ Prompt templates live under `app/prompts/templates` and are resolved through the
 
 ## Provider Boundary
 
-`AIProvider` defines the generation interface. `MockAIProvider` is the default public-safe implementation and raises a configuration error if a non-mock provider is selected without credentials.
+`AIProvider` defines the generation interface. `MockAIProvider` is the only implemented provider, and configuration validation rejects unsupported provider names. A provider factory supplies the instantiated provider to orchestration and readiness reporting.
 
 ## Retrieval Boundary
 
-Retrieval logic is hidden behind retriever interfaces. The in-memory retriever is used for deterministic tests and local examples, while `PgVectorRetriever` provides the PostgreSQL/pgvector adapter path.
+Retrieval logic is hidden behind retriever interfaces. A runtime factory selects the in-memory retriever for deterministic tests and local examples or `PgVectorRetriever` for the PostgreSQL/pgvector adapter path. Readiness reports the selected retriever instance.
