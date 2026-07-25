@@ -33,7 +33,6 @@ All runtime configuration is provided through environment variables. Local devel
 | `ENVIRONMENT` | Runtime environment label | `local` |
 | `LOG_LEVEL` | Application log level | `INFO` |
 | `LLM_PROVIDER` | LLM provider selector | `mock` |
-| `LLM_API_KEY` | Optional provider credential | empty |
 | `DEFAULT_MODEL` | Default generation model | `flowforge-local-mock` |
 | `EMBEDDING_PROVIDER` | Embedding provider selector | `mock` |
 | `EMBEDDING_MODEL` | Default embedding model | `flowforge-local-embedding` |

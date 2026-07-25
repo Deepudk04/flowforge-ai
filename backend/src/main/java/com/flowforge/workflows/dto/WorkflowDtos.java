@@ -1,5 +1,6 @@
 package com.flowforge.workflows.dto;
 
+import com.flowforge.jobs.model.GenerationJobStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -29,7 +30,7 @@ public final class WorkflowDtos {
             String title,
             String mermaid,
             List<String> warnings,
-            String status,
+            GenerationJobStatus status,
             Instant createdAt,
             String jobId
     ) {

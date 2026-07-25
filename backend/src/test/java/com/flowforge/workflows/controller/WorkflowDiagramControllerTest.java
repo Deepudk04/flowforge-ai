@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.flowforge.jobs.model.GenerationJobStatus;
 import com.flowforge.workflows.dto.WorkflowDtos.WorkflowDiagramResponse;
 import com.flowforge.workflows.service.WorkflowDiagramService;
 import java.time.Instant;
@@ -39,7 +40,7 @@ class WorkflowDiagramControllerTest {
                 "Vendor Approval Workflow",
                 "flowchart TD\n    intake --> approval",
                 List.of(),
-                "COMPLETED",
+                GenerationJobStatus.COMPLETED,
                 Instant.parse("2026-07-16T00:00:00Z"),
                 "job_123"
         ));
@@ -66,6 +67,7 @@ class WorkflowDiagramControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.title").value("Vendor Approval Workflow"))
                 .andExpect(jsonPath("$.data.mermaid").value(org.hamcrest.Matchers.containsString("intake --> approval")))
+                .andExpect(jsonPath("$.data.status").value("COMPLETED"))
                 .andExpect(jsonPath("$.data.jobId").value("job_123"));
     }
 
@@ -76,7 +78,7 @@ class WorkflowDiagramControllerTest {
                 "Vendor Approval Workflow",
                 "flowchart TD\n    intake --> approval",
                 List.of(),
-                "COMPLETED",
+                GenerationJobStatus.COMPLETED,
                 Instant.parse("2026-07-16T00:00:00Z"),
                 "job_123"
         ));

@@ -18,10 +18,12 @@ The backend is a Spring Boot service under the `com.flowforge` package. It expos
 ## Request Flow
 
 1. Controller validates the request DTO.
-2. Service performs local orchestration or delegates to an integration boundary.
-3. Responses are wrapped in `ApiResponse`.
-4. Errors pass through `GlobalExceptionHandler`.
-5. `CorrelationIdFilter` adds `X-Correlation-Id` to each response.
+2. Service creates and starts a generation job through short persistence transactions.
+3. Service delegates to `AiServiceClient` without holding a database transaction open.
+4. Successful output and job completion are persisted atomically; failure uses an independent transaction.
+5. Responses are wrapped in `ApiResponse`.
+6. Errors pass through `GlobalExceptionHandler`.
+7. `CorrelationIdFilter` adds `X-Correlation-Id` to each response.
 
 ## Persistence
 
@@ -29,7 +31,7 @@ The first schema contains generation jobs, generated documents, and workflow dia
 
 ## API Boundaries
 
-Controllers return `ApiResponse<T>` envelopes and rely on DTO validation for request shape. The current generation services return deterministic local results, while `integration.AiServiceClient` defines the boundary for provider-backed generation.
+Controllers return `ApiResponse<T>` envelopes and rely on DTO validation for request shape. Generation services call `integration.AiServiceClient`; its HTTP implementation is the default and its local implementation supports deterministic tests and offline demos.
 
 ## Error Handling
 

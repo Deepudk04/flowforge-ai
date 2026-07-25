@@ -12,7 +12,7 @@ flowchart LR
     AI --> PromptRegistry[Prompt Registry]
     AI --> Retriever[RAG Retriever]
     Retriever --> VectorDB[(PostgreSQL + pgvector)]
-    AI --> Provider[Mock or External LLM Provider]
+    AI --> Provider[Provider Interface / Mock Implementation]
     Backend --> Mermaid[Mermaid Workflow Output]
 ```
 
@@ -38,7 +38,7 @@ sequenceDiagram
     Backend-->>Client: ApiResponse<DocumentGenerationResponse>
 ```
 
-The backend calls the FastAPI AI service by default. Tests and offline demos can use deterministic local mode with `AI_SERVICE_MODE=local`.
+The backend calls the FastAPI AI service by default. Tests and offline demos can use deterministic local mode with `AI_SERVICE_MODE=local`. Job lifecycle writes use short transactions; the external AI call does not hold a database transaction open.
 
 ## AI Pipeline Flow
 
@@ -47,7 +47,7 @@ flowchart TD
     Input[Structured or Semi-Structured Input] --> Query[Build Retrieval Query]
     Query --> Retrieve[Retrieve Context]
     Retrieve --> Render[Render Versioned Prompt]
-    Render --> Provider[Mock or Configured LLM Provider]
+    Render --> Provider[Runtime-Validated Mock Provider]
     Provider --> Result[GenerationResult]
     Result --> Output[Document or Workflow Content]
 ```

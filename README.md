@@ -55,7 +55,7 @@ flowchart LR
     AI --> PromptRegistry[Prompt Registry]
     AI --> Retriever[RAG Retriever]
     Retriever --> VectorDB[(PostgreSQL + pgvector)]
-    AI --> Provider[Mock or External LLM Provider]
+    AI --> Provider[Provider Interface / Mock Implementation]
     Backend --> Mermaid[Mermaid Workflow Output]
 ```
 
@@ -87,7 +87,7 @@ sequenceDiagram
 flowchart TD
     Input[Process Input] --> Retrieve[Retrieve Relevant Context]
     Retrieve --> Render[Render Versioned Prompt]
-    Render --> Provider[Mock or Configured Provider]
+    Render --> Provider[Runtime-Validated Mock Provider]
     Provider --> Validate[Return Structured Result]
     Validate --> Output[Document or Workflow Content]
 ```
@@ -230,8 +230,8 @@ uvicorn app.main:app --reload
 
 ```bash
 cd backend
-mvn test
-mvn spring-boot:run
+./mvnw test
+./mvnw spring-boot:run
 ```
 
 The backend starts on port `8080` by default.
@@ -243,7 +243,7 @@ The CI workflow validates both services:
 | Service | Checks |
 | --- | --- |
 | AI service | Install dependencies, compile `app` and `tests`, run `pytest -v` |
-| Backend | Set up Java 21, run `mvn test` |
+| Backend | Set up Java 21, run `./mvnw test` |
 
 Tests are designed around local and mock behavior. They should not require real LLM credentials.
 
@@ -281,6 +281,7 @@ Tests are designed around local and mock behavior. They should not require real 
 - [Security notes](docs/security.md)
 - [Local development](docs/local-development.md)
 - [Design decisions](docs/design-decisions.md)
+- [Flagship implementation plan](docs/flagship-implementation-plan.md)
 - [Roadmap](docs/roadmap.md)
 
 ## Public Repository Disclaimer

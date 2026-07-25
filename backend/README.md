@@ -12,8 +12,8 @@ Spring Boot API for document generation, workflow diagrams, templates, generatio
 
 ```bash
 cd backend
-mvn test
-mvn spring-boot:run
+./mvnw test
+./mvnw spring-boot:run
 ```
 
 The default configuration uses local PostgreSQL settings through environment variables. The demo security mode is disabled by default with `FLOWFORGE_SECURITY_ENABLED=false`.

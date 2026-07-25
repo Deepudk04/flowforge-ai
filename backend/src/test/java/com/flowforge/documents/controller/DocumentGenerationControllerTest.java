@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.flowforge.documents.dto.DocumentDtos.DocumentGenerationResponse;
 import com.flowforge.documents.service.DocumentGenerationService;
+import com.flowforge.jobs.model.GenerationJobStatus;
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ class DocumentGenerationControllerTest {
                 "SampleDocument",
                 "document",
                 "# SampleDocument",
-                "COMPLETED",
+                GenerationJobStatus.COMPLETED,
                 Instant.parse("2026-07-16T00:00:00Z"),
                 "job_123"
         ));
@@ -56,6 +57,7 @@ class DocumentGenerationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.title").value("SampleDocument"))
+                .andExpect(jsonPath("$.data.status").value("COMPLETED"))
                 .andExpect(jsonPath("$.data.jobId").value("job_123"));
     }
 
@@ -66,7 +68,7 @@ class DocumentGenerationControllerTest {
                 "SampleDocument",
                 "document",
                 "# SampleDocument",
-                "COMPLETED",
+                GenerationJobStatus.COMPLETED,
                 Instant.parse("2026-07-16T00:00:00Z"),
                 "job_123"
         ));

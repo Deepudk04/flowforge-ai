@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from app.config import Settings
-from app.core.errors import ProviderConfigurationError
 from app.models import UsageTrace
 
 
@@ -34,8 +33,6 @@ class MockAIProvider:
     name = "mock"
 
     def __init__(self, settings: Settings):
-        if settings.llm_provider != "mock" and not settings.llm_api_key:
-            raise ProviderConfigurationError("Remote LLM provider requires LLM_API_KEY.")
         self.model = settings.default_model
 
     def generate(self, request: ProviderRequest) -> ProviderResponse:
@@ -138,3 +135,9 @@ class MockAIProvider:
         if len(parts) == 2 and parts[0].isdigit():
             return parts[1]
         return value
+
+
+def create_provider(settings: Settings) -> AIProvider:
+    if settings.llm_provider == "mock":
+        return MockAIProvider(settings)
+    raise ValueError(f"Unsupported LLM provider: {settings.llm_provider}")

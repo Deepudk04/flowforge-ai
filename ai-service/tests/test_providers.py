@@ -1,8 +1,8 @@
 import pytest
+from pydantic import ValidationError
 
 from app.config import Settings
-from app.core.errors import ProviderConfigurationError
-from app.providers import MockAIProvider, ProviderRequest
+from app.providers import MockAIProvider, ProviderRequest, create_provider
 
 
 def test_mock_provider_returns_usage_trace():
@@ -25,8 +25,13 @@ def test_mock_provider_returns_usage_trace():
     assert "1 context item(s) used." in response.content
 
 
-def test_remote_provider_requires_api_key():
-    settings = Settings(llm_provider="openai", llm_api_key="")
+def test_unsupported_provider_is_rejected_by_configuration():
+    with pytest.raises(ValidationError, match="llm_provider"):
+        Settings(llm_provider="openai")
 
-    with pytest.raises(ProviderConfigurationError, match="LLM_API_KEY"):
-        MockAIProvider(settings)
+
+def test_provider_factory_returns_configured_mock():
+    provider = create_provider(Settings(default_model="synthetic-model"))
+
+    assert provider.name == "mock"
+    assert provider.model == "synthetic-model"

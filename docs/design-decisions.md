@@ -12,6 +12,8 @@ FastAPI keeps AI orchestration in a Python service where provider SDKs, prompt t
 
 The split keeps API ownership and AI experimentation separate. The backend can remain stable for clients while the AI service changes provider integrations, retrieval strategies, prompt versions, or evaluation code.
 
+The formal ownership decision and consequences are recorded in [ADR 001](adr/001-spring-fastapi-ownership.md).
+
 ## Why PostgreSQL and pgvector
 
 PostgreSQL handles normal metadata such as generated documents, workflow diagrams, and generation job records. pgvector allows retrieval embeddings to live beside operational data without adding a separate vector database to the local architecture.
@@ -34,7 +36,7 @@ Synchronous generation is simpler for the public version and easy to test throug
 
 ## Intentionally Simplified Public Version
 
-- Backend endpoints currently use deterministic local generation behavior.
-- The backend-to-AI-service HTTP path is represented as a boundary and roadmap item rather than a fully wired production integration.
-- Retrieval uses synthetic local examples by default.
+- Backend endpoints call the FastAPI service by default; deterministic local mode remains available for tests and offline demos.
+- The mock provider is the only implemented LLM provider.
+- Retrieval uses synthetic local examples by default, with a pgvector adapter available through runtime configuration.
 - No real customer data, proprietary prompts, private documents, or production credentials are included.

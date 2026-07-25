@@ -1,5 +1,6 @@
 package com.flowforge.jobs.dto;
 
+import com.flowforge.jobs.model.GenerationJobStatus;
 import java.time.Instant;
 
 public final class GenerationJobDtos {
@@ -8,7 +9,7 @@ public final class GenerationJobDtos {
 
     public record GenerationJobResponse(
             String jobId,
-            String status,
+            GenerationJobStatus status,
             String resourceType,
             String resourceId,
             Instant createdAt,
