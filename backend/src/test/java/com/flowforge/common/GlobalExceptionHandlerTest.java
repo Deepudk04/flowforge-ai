@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 class GlobalExceptionHandlerTest {
     private final GlobalExceptionHandler handler = new GlobalExceptionHandler();
@@ -20,5 +21,17 @@ class GlobalExceptionHandlerTest {
         assertThat(response.getBody().success()).isFalse();
         assertThat(response.getBody().error().code()).isEqualTo("BAD_REQUEST");
         assertThat(response.getBody().error().path()).isEqualTo("/api/v1/documents/generate");
+    }
+
+    @Test
+    void oversizedUploadReturnsPayloadTooLargeEnvelope() {
+        HttpServletRequest request = new MockHttpServletRequest("POST", "/api/v1/workspaces/ws_123/sources");
+
+        var response = handler.handleUploadTooLarge(new MaxUploadSizeExceededException(1024), request);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(413);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().error().code()).isEqualTo("PAYLOAD_TOO_LARGE");
+        assertThat(response.getBody().error().message()).contains("size limit");
     }
 }

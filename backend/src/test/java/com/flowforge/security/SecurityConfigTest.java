@@ -22,7 +22,10 @@ import org.springframework.test.web.servlet.MockMvc;
         "flowforge.ai-service.base-url=http://localhost:8000",
         "flowforge.ai-service.timeout-ms=30000",
         "flowforge.ai-service.retry-attempts=3",
-        "flowforge.ai-service.retry-backoff-ms=250"
+        "flowforge.ai-service.retry-backoff-ms=250",
+        "flowforge.sources.storage-root=.flowforge/test-storage",
+        "flowforge.sources.max-file-size-bytes=10485760",
+        "flowforge.sources.max-pdf-pages=100"
 })
 class SecurityConfigTest {
     @Autowired

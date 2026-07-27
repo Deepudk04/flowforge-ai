@@ -23,5 +23,7 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 migration.md
 .idea/
+.flowforge/
+backend/.flowforge/
 docs/roadmap.md
 docs/flagship-implementation-plan.md

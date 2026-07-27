@@ -7,6 +7,7 @@ import com.flowforge.config.FlowForgeProperties;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.file.Path;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -98,7 +99,8 @@ class HttpAiServiceClientTest {
                         1000,
                         retryAttempts,
                         0
-                )
+                ),
+                new FlowForgeProperties.Sources(Path.of(".flowforge/storage"), 10_485_760, 100)
         );
     }
 
